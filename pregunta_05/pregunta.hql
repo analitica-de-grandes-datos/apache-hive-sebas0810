@@ -44,4 +44,14 @@ LOAD DATA LOCAL INPATH 'data1.csv' INTO TABLE tbl1;
 /*
     >>> Escriba su respuesta a partir de este punto <<<
 */
+INSERT OVERWRITE DIRECTORY 'output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+SELECT anio, letra, count(letra)
+FROM(
+        SELECT YEAR(c4) anio, c5_1 letra
+        FROM tbl0
+        LATERAL VIEW EXPLODE (c5) e5 AS c5_1
+    ) dat
+group by anio, letra
+order by anio, letra;
 
